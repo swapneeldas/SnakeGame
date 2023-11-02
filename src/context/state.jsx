@@ -9,7 +9,6 @@ const State=(props)=>{
    let [started,setstarted]=useState(false);
    let [snakedirection,setsnakedirection]=useState(null);
    let [gameover,setgameover]=useState(false);
-   let lengthtobeincrease=useRef(0);
    let setinterval=useRef();
    function movesnake(){
     if(snakedirection!==null){
@@ -17,79 +16,75 @@ const State=(props)=>{
         if(snakedirection==="d"){
             let holder={...a[0]};
             let snakesize=snakearray.length;
-            a[0].y=a[0].y+1;
-            for(let i=1;i<snakesize-lengthtobeincrease;i++){
-                a[i]={...holder};
-                if(i+1<snakesize){
-                holder={...a[i+1]}
-                }
+            for(let i=snakesize-1;i>0;i--){
+                a[i]={...a[i-1]};
             }
+            a[0].y=a[0].y+1;
+            if(a[0]==a[1] ){
+                setsnakedirection("a");
+            }
+            else{
             setsnakearray(a);
+            }
         }
         if(snakedirection==="w"){
 
             let holder={...a[0]};
             let snakesize=snakearray.length;
-            a[0].x=a[0].x-1;
-            for(let i=1;i<snakesize-lengthtobeincrease.current;i++){
-                if(lengthtobeincrease.current!==0){
-                    lengthtobeincrease.current--;
-                }
-                a[i]={...holder};
-                if(i+1<snakesize){
-                holder={...a[i+1]}
-                }
+            for(let i=snakesize-1;i>0;i--){
+                a[i]={...a[i-1]};
             }
+            a[0].x=a[0].x-1;
+            if(a[0]==a[1] ){
+                setsnakedirection("s");
+            }
+            else{
             setsnakearray(a);
+            }
         }
         if(snakedirection==="s"){
             let holder={...a[0]};
             let snakesize=snakearray.length;
-            a[0].x=a[0].x+1;
-            for(let i=1;i<snakesize-lengthtobeincrease.current;i++){
-                if(lengthtobeincrease.current!==0){
-                    lengthtobeincrease.current--;
-                }
-                a[i]={...holder};
-                if(i+1<snakesize){
-                holder={...a[i+1]}
-                }
+            for(let i=snakesize-1;i>0;i--){
+                a[i]={...a[i-1]};
             }
+            a[0].x=a[0].x+1;
+            if(a[0]==a[1] ){
+                setsnakedirection("w");
+            }
+            else{
             setsnakearray(a);
+            }
         }
         if(snakedirection==="a"){
             let holder={...a[0]};
             let snakesize=snakearray.length;
-            a[0].y=a[0].y-1;
-            for(let i=1;i<snakesize-lengthtobeincrease.current;i++){
-                if(lengthtobeincrease.current!==0){
-                    lengthtobeincrease.current--;
-                }
-                a[i]={...holder};
-                if(i+1<snakesize){
-                holder={...a[i+1]}
-                }
+            for(let i=snakesize-1;i>0;i--){
+                a[i]={...a[i-1]};
             }
+            a[0].y=a[0].y-1;
             setsnakearray(a);
         }
     
     }
    }
-   //movement of snake
+//    movement of snake 
    useEffect(()=>{
-    if(gameover!=true){
-    movesnake();
+    if(gameover!==true){
+    // movesnake();
    setinterval=setInterval(() => {
     movesnake();
-}, 200);
+    let snakesize=snakearray.length;
+    let a=[...snakearray];
+    for(let i=snakesize-1;i>0;i--){
+        a[i]={...a[i-1]};
     }
-return ()=>{
-    
+}, 100);
+}    
+return ()=>{   
     clearInterval(setinterval)
-
 };
-   },[started,snakedirection,gameover])
-
+   })
 
 
    useEffect(()=>{
@@ -105,8 +100,8 @@ return ()=>{
   function LengthIncrease(){
     let a=[...snakearray];
     let length=a.length;
-    a.push(a[length-1]);
-    lengthtobeincrease++;
+    a=[...snakearray,a[length-1]];
+    console.log(`increase snakearray length ${JSON.stringify(JSON.stringify(a))}`);
     setsnakearray(a);
   }
    //*food is eaten
@@ -126,9 +121,9 @@ return ()=>{
         setgameover(true);
     }
     //*inside snake
-    for(let i=1;i<snakearray.length;i++){
+    for(let i=2;i<snakearray.length;i++){
         if(JSON.stringify(snakearray[0])===JSON.stringify(snakearray[i])){
-            console.log("Game Over");
+            setgameover(true);
         }}
    },[snakearray])
     

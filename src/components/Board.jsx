@@ -8,10 +8,7 @@ const Board = () => {
     document.addEventListener("keydown",detectKey,true)
   },[])
   const detectKey=(e)=>{
-    // if(!started){
-    //   setstarted(!started);
-    // }
-    console.log(e.key);
+    
     setsnakedirection(e.key);
   }
   return (
