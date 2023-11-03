@@ -4,9 +4,8 @@
 }
 body{
   background: #08011d;
-  position: relative;
-  z-index: 1;
 }
-.Gameover{
-  z-index: -4;
+.GameOverScreen{
+  background-color: rgba(255, 255, 255, 0.212);
+  backdrop-filter: blur(16px);
 }
