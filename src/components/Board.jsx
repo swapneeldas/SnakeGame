@@ -3,12 +3,16 @@ import Context from '../context/context';
 const Board = () => {
   let context=useContext(Context);
   // console.log(context);
-  let {matrix,setmatrix,snakearray,setsnakearray,foodlocation,started,setstarted,setsnakedirection}=context;
+  let {matrix,snakearray,foodlocation,setsnakedirection,gameover,setgameover}=context;
   useEffect(()=>{
     document.addEventListener("keydown",detectKey,true)
-  },[])
+  },[gameover])
   const detectKey=(e)=>{
-    
+    if(gameover){
+      setgameover(false);
+      setsnakedirection(null);
+      return;
+    }
     setsnakedirection(e.key);
   }
   return (

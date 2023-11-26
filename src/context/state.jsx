@@ -9,55 +9,39 @@ const State=(props)=>{
    let [started,setstarted]=useState(false);
    let [snakedirection,setsnakedirection]=useState(null);
    let [gameover,setgameover]=useState(false);
+   
+
    let setinterval=useRef();
    function movesnake(){
     if(snakedirection!==null){
         let a=[...snakearray];
         if(snakedirection==="d"){
-            let holder={...a[0]};
             let snakesize=snakearray.length;
             for(let i=snakesize-1;i>0;i--){
                 a[i]={...a[i-1]};
             }
             a[0].y=a[0].y+1;
-            if(a[0]==a[1] ){
-                setsnakedirection("a");
-            }
-            else{
             setsnakearray(a);
-            }
+            
         }
         if(snakedirection==="w"){
-
-            let holder={...a[0]};
             let snakesize=snakearray.length;
             for(let i=snakesize-1;i>0;i--){
                 a[i]={...a[i-1]};
             }
             a[0].x=a[0].x-1;
-            if(a[0]==a[1] ){
-                setsnakedirection("s");
-            }
-            else{
             setsnakearray(a);
-            }
+            
         }
         if(snakedirection==="s"){
-            let holder={...a[0]};
             let snakesize=snakearray.length;
             for(let i=snakesize-1;i>0;i--){
                 a[i]={...a[i-1]};
             }
             a[0].x=a[0].x+1;
-            if(a[0]==a[1] ){
-                setsnakedirection("w");
-            }
-            else{
             setsnakearray(a);
-            }
         }
         if(snakedirection==="a"){
-            let holder={...a[0]};
             let snakesize=snakearray.length;
             for(let i=snakesize-1;i>0;i--){
                 a[i]={...a[i-1]};
@@ -100,15 +84,16 @@ return ()=>{
   function LengthIncrease(){
     let a=[...snakearray];
     let length=a.length;
+    if(length>20){
+        return;
+    }
     a=[...snakearray,a[length-1]];
-    console.log(`increase snakearray length ${JSON.stringify(JSON.stringify(a))}`);
     setsnakearray(a);
   }
    //*food is eaten
    useEffect(()=>{
     //food eaten part
     if(JSON.stringify(snakearray[0])===JSON.stringify(foodlocation)){
-        console.log("food eaten");
         generatefood();
         setScore(Score+1);
         LengthIncrease();
@@ -156,11 +141,32 @@ return ()=>{
     ()=>{
     if(Score>Hiscore){
         setHiscore(Score);
+        localStorage.setItem("Hiscoresnake",`${Score}`);
     }},[Score])
-  
 
+  useEffect(
+    ()=>{
+        if(gameover==false){
+            setScore(0);
+            setsnakearray([{x:5,y:5}]);
+            setfoodlocation({x:4,y:4});
+            setstarted(false);
+            setsnakedirection(null);
+            setgameover(false);
+        }
+    },[gameover])
+ useEffect(
+    ()=>{
+        let hiS=localStorage.getItem("Hiscoresnake");
+        if(hiS!=null){
+            hiS=Number(hiS);
+            setHiscore(hiS);
+        }
+    },
+    []
+ )
     return (
-        <Context.Provider value={{matrix,setmatrix,snakearray,setsnakearray,foodlocation,started,setstarted,setsnakedirection,Score,Hiscore}}>
+        <Context.Provider value={{matrix,setmatrix,snakearray,setsnakearray,foodlocation,started,setstarted,setsnakedirection,Score,Hiscore,gameover,setgameover}}>
         {props.children}
         </Context.Provider>
     )
